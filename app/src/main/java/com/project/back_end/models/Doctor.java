@@ -18,11 +18,11 @@ public class Doctor {
 
     @NotNull
     @Size(min=3, max=100)
-    private String field;
+    private String name;
 
     @NotNull
     @Size(min=3, max=50)
-    private String prescription;
+    private String specialty;
 
     @NotNull
     @Email
@@ -38,7 +38,7 @@ public class Doctor {
     private String phone;
 
     @ElementCollection
-    private List<String> availaleTimes;
+    private List<String> availableTimes;
 
     public Long getId() {
         return id;
@@ -48,20 +48,20 @@ public class Doctor {
         this.id = id;
     }
 
-    public String getField() {
-        return field;
+    public String getSpecialty() {
+        return specialty;
     }
 
-    public void setField(String field) {
-        this.field = field;
+    public void setSpecialty(String specialty) {
+        this.specialty = specialty;
     }
 
-    public String getPrescription() {
-        return prescription;
+    public String getName() {
+        return name;
     }
 
-    public void setPrescription(String prescription) {
-        this.prescription = prescription;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -88,12 +88,12 @@ public class Doctor {
         this.phone = phone;
     }
 
-    public List<String> getAvailaleTimes() {
-        return availaleTimes;
+    public List<String> getAvailableTimes() {
+        return availableTimes;
     }
 
-    public void setAvailaleTimes(List<String> availaleTimes) {
-        this.availaleTimes = availaleTimes;
+    public void setAvailableTimes(List<String> availableTimes) {
+        this.availableTimes = availableTimes;
     }
 }
 
