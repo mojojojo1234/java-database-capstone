@@ -1,5 +1,96 @@
 /* This is the style sheet for the doctorDashboard.html */
+
+.table-header {
+    font-size: 24px;
+    color: #015c5d;
+    margin-right: 0px;
+    margin-bottom: 30px;
+}
+
+table {
+    width:100%;
+    font-family:sans-serif;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+thead {
+    background-color: #333310;
+    color: white;
+}
+
+td, th {
+    padding: 12px 16px;
+    text-align: center;
+    border: 1px solid #dddddd;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f959;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #ffffffc0;
+}
+
+tbody tr:hover {
+    background-color: #015c5d;
+}
+.prescription-btn {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.prescription-btn:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+}
+
+.prescription-btn:active {
+    transform: scale(0.95);
+}
+
+/* No Record Message */
+.noPatientRecord {
+    font-size: 16px;
+    font-style: italic;
+    color: grey;
+}
+
+/* Today Button */
+.today-btn {
+    margin-right: 10px;
+    padding: 10px;
+    background-color: #015c5d;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Date Picker */
+.date-picker {
+    margin-left: 10px;
+    margin-top: 13px;
+    border-radius: 8px;
+    padding: 10px;
+    height: 30px;
+    border: 1px solid #ccc;
+}
+
+/* Search Bar */
+.searchBar {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
 /* 
+---
+
 **Table Header (`.table-header`)**
 
 * Set font size to `24px` for clear emphasis.
@@ -23,6 +114,7 @@
 * Apply padding of `12px 16px` for spacing.
 * Center-align the text.
 * Add a subtle bottom border (`1px solid #ddd`).
+
 
 **Table Row Styling**
 
@@ -59,7 +151,4 @@
 * Round corners with `8px` radius.
 * Add padding (`10px`) and set fixed height (`30px`).
 
----
-
-Let me know if you'd like a consolidated style guide for the entire HospitalCRM frontend.
  */

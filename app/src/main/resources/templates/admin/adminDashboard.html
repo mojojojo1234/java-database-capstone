@@ -1,5 +1,59 @@
 <!-- adminDashboard.html -->
 
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" th:href="@{/assets/css/adminDashboard.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+
+    <script th:src="@{/js/render.js}" defer></script>
+    <script th:src="@{/js/util.js}" defer></script>
+
+    <script th:src="@{/js/components/header.js}" defer></script>
+    <script th:src="@{/js/components/footer.js}" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="wrapper">
+            <div id="header"></div>
+            <main class="main-content">
+                <input type="text" id="searchBar" placeholder="Search by doctor name" />
+
+                <!-- Filter Dropdowns -->
+                <select id="timeFilter">
+                    <option value="">Select Time</option>
+                    <option value="AM">AM</option>
+                    <option value="PM">PM</option>
+                </select>
+
+                <select id="specialtyFilter">
+                    <option value="">Select Specialty</option>
+                    <option value="Cardiologist">Cardiologist</option>
+                    <option value="Dentist">Dentist</option>
+                    <option value="Dermatologist">Dermatologist</option>
+                    <option value="Neurologist">Neurologist</option>
+                    <option value="Pediatrician">Pediatrician</option>
+                </select>
+                <div id="content"></div>
+            </main>
+            <div id="footer"></div>
+        </div>
+    </div>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="modalClose">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+    <script type="module" src="../../static/js/adminDashboard.js" defer></script>
+    <script type="module" src="../../static/js/doctorDashboard.js" defer></script>
+</body>
+</html>
 <!-- 
 Step-by-Step Explanation of `adminDashboard.html`
 This file creates the Admin Dashboard interface for managing doctor-related data 

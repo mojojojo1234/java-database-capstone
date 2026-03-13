@@ -1,6 +1,73 @@
 /*this is the style sheet for the adminDashboard. */
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html, body {
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+.wrapper, main-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+h2 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 50px;
+    color: #003e3e;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 40px;
+    text-align: center;
+    background-image: url("static/assets/images/defineRole/index.png");
+    background-size:cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+button {
+    background-color: #A62B1F;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 20px;
+    margin-top: 20px;
+    width: 200px;
+    cursor:pointer;
+    font-size: 16px;
+}
+
+.adminBtn {
+    background-color: #f4f4f4;
+    color: #333;
+    font-weight: bold;
+    width: 110px;
+    padding: 10px 0;
+    border: none;
+    cursor: pointer;
+}
+
+.adminBtn:hover {
+    color: #A62B1F;
+    background-color: #f4f4f4;
+}
+
+
+
 /* 
+ ------
+
 Global Reset (`*`)
 
 * Purpose: Ensure consistent layout across all browsers.
@@ -37,7 +104,7 @@ Section Heading (`h2`)
   * `margin-bottom: 50px` — creates space below the heading.
   * `color: #003e3e` — uses a strong teal for visual anchoring.
 
-Main Content Section (`.main-content`)
+  Main Content Section (`.main-content`)
 
 * Purpose: Layout the main content with padding and a background image.
 * Properties:
@@ -52,7 +119,7 @@ Main Content Section (`.main-content`)
   * `background-repeat: no-repeat` — avoids tiling the image.
   * `background-attachment: fixed` — fixes the image while scrolling.
 
-Primary Button (`button`)
+  Primary Button (`button`)
 
 * Purpose: Design prominent, interactive buttons for main actions.
 
@@ -72,7 +139,7 @@ Primary Button (`button`)
 
   * Retains the same red background to maintain branding.
 
-Admin Button (`.adminBtn`)
+  Admin Button (`.adminBtn`)
 
 * Purpose: Provide a secondary button style for admin-specific actions.
 
@@ -89,6 +156,4 @@ Admin Button (`.adminBtn`)
 * On Hover**:
 
    Changes text color to `#A62B1F` for brand consistency while keeping the background same.
-
-
 */

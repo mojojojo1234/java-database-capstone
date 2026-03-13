@@ -1,6 +1,65 @@
-/* this is the style sheet file for index.htlm  */
+/* this is the style sheet file for index.html  */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 
-/* 
+}
+html, body {
+    height:100%;
+    font-family: roboto, sans-serif;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+
+}
+
+h2 {
+    font-size: 48px;
+    margin-bottom: 50px;
+    color:#003e3e;
+    font-weight: bold;
+    font-family: 'Alegreya', 'Roboto', sans-serif;
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 40px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-image: url("static/assets/images/defineRole/index.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+button {
+    background-color: #015c5d;
+    border:none;
+    border-radius: 12px;
+    padding: 10px 20px;
+    width: 200px;
+    margin-top:10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+button:hover {
+    background-color: #A62B1F;
+}
+
+#closeModal {
+    background-color: #015c5d;
+}
+#closeModal:hover {
+    background-color: #003e3e;
+}
+/*
+-------
 **Global Reset (`*`)**
 
 * Remove all default margin and padding.
@@ -37,7 +96,7 @@
   * no repeat
   * `fixed` attachment to keep image still during scroll
 
-**Buttons (`button`)**
+  **Buttons (`button`)**
 
 * Style with a teal green background (`#015c5d`) and white text.
 * Remove borders and round the corners (`12px`).
