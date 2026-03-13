@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan("com.project.back_end")
+//@ComponentScan("com.project.back_end")
 public class BackEndApplication {
 
 	public static void main(String[] args) {
