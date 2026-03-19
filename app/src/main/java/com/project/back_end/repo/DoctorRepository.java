@@ -1,6 +1,24 @@
 package com.project.back_end.repo;
 
-public interface DoctorRepository {
+import com.project.back_end.models.Doctor;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface DoctorRepository extends JpaRepository<Doctor, Long> {
+
+    Optional<Doctor> findByEmail(String email);
+//    public Doctor findByEmail(String email);
+    public List<Doctor> findByNameLike(String name);
+
+    public List<Doctor> findByNameContainingIgnoreCaseAndSpecialtyIgnoreCase(String name, String specialty);
+
+    public List<Doctor> findBySpecialtyIgnoreCase(String specialty);
+
+
+
+
    // 1. Extend JpaRepository:
 //    - The repository extends JpaRepository<Doctor, Long>, which gives it basic CRUD functionality.
 //    - This allows the repository to perform operations like save, delete, update, and find without needing to implement these methods manually.

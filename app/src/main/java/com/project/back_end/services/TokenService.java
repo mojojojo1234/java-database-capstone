@@ -1,10 +1,85 @@
 package com.project.back_end.services;
 
+
+import com.project.back_end.repo.AdminRepository;
+import com.project.back_end.repo.DoctorRepository;
+import com.project.back_end.repo.PatientRepository;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+
+@Component
 public class TokenService {
 // 1. **@Component Annotation**
 // The @Component annotation marks this class as a Spring component, meaning Spring will manage it as a bean within its application context.
 // This allows the class to be injected into other Spring-managed components (like services or controllers) where it's needed.
 
+    private final AdminRepository adminRepository;
+    private final DoctorRepository doctorRepository;
+    private final PatientRepository patientRepository;
+    @Value("${jwt.secret}")
+    private String secret;
+
+
+    public TokenService(AdminRepository adminRepository, DoctorRepository doctorRepository, PatientRepository patientRepository) {
+        this.adminRepository = adminRepository;
+        this.doctorRepository = doctorRepository;
+        this.patientRepository = patientRepository;
+    }
+
+    private SecretKey getSigningKey() {
+        byte[] keyBytes = secret.getBytes();
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+    public String generateToken(String identifier) {
+        JwtBuilder builder = Jwts.builder();
+        Date now=new Date();
+        Date expiryDate=Date.from(Instant.now().plus(Duration.of(7, ChronoUnit.DAYS)));
+        return Jwts.builder()
+                .setSubject(identifier)
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+    public String extractEmail(String token) {
+        return Jwts.parser()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+    public boolean validateToken(String token, String user) {
+        try {
+            String email=extractEmail(token);
+            System.out.println("DEBUG - extracted email: " + email + " | user: " + user);
+            if(user.equalsIgnoreCase("admin")) {
+                return adminRepository.findByUsername(email).isPresent();
+            }
+            else if(user.equalsIgnoreCase("patient")){
+                boolean found = patientRepository.findByEmail(email).isPresent();
+                System.out.println("DEBUG - patient found in DB: " + found);
+                return found;
+            }
+            else if(user.equalsIgnoreCase("doctor")) return doctorRepository.findByEmail(email).isPresent();
+            return false;
+        }
+        catch(Exception e){
+            System.out.println("DEBUG - exception: " + e.getMessage());
+            return false;
+        }
+    }
 // 2. **Constructor Injection for Dependencies**
 // The constructor injects dependencies for `AdminRepository`, `DoctorRepository`, and `PatientRepository`,
 // allowing the service to interact with the database and validate users based on their role (admin, doctor, or patient).

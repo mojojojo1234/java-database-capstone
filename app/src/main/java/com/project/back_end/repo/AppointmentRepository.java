@@ -1,6 +1,40 @@
 package com.project.back_end.repo;
 
-public interface AppointmentRepository  {
+import com.project.back_end.models.Appointment;
+import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
+    public List<Appointment> findByDoctorIdAndAppointmentTimeBetween(Long doctorId, LocalDateTime start, LocalDateTime end);
+    public List<Appointment> findByDoctorIdAndPatient_NameContainingIgnoreCaseAndAppointmentTimeBetween(Long doctorId, String patientName, LocalDateTime start, LocalDateTime end);
+
+    @Modifying
+    @Transactional
+    public void deleteAllByDoctorId(Long doctorId);
+
+    public List<Appointment> findByPatientId(Long patientId);
+
+    public List<Appointment> findByPatient_IdAndStatusOrderByAppointmentTimeAsc(Long patientId, int status);
+
+    public List<Appointment> findByDoctorNameAndPatientId(String doctorName, Long patientId);
+
+    public List<Appointment> findByDoctorNameAndPatientIdAndStatus(String doctorName, Long patientId,int status);
+
+    // AppointmentRepository.java
+    boolean existsByDoctorIdAndAppointmentTime(Long doctorId, LocalDateTime appointmentTime);
+
+//    @Transactional
+//    public void updateStatus(int status, long id);
+
+
+
+
+
+
 
    // 1. Extend JpaRepository:
 //    - The repository extends JpaRepository<Appointment, Long>, which gives it basic CRUD functionality.

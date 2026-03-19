@@ -1,23 +1,71 @@
 package com.project.back_end.services;
 
+import com.project.back_end.models.Prescription;
+import com.project.back_end.repo.PrescriptionRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+@Service
 public class PrescriptionService {
-    
- // 1. **Add @Service Annotation**:
-//    - The `@Service` annotation marks this class as a Spring service component, allowing Spring's container to manage it.
-//    - This class contains the business logic related to managing prescriptions in the healthcare system.
-//    - Instruction: Ensure the `@Service` annotation is applied to mark this class as a Spring-managed service.
 
-// 2. **Constructor Injection for Dependencies**:
-//    - The `PrescriptionService` class depends on the `PrescriptionRepository` to interact with the database.
-//    - It is injected through the constructor, ensuring proper dependency management and enabling testing.
-//    - Instruction: Constructor injection is a good practice, ensuring that all necessary dependencies are available at the time of service initialization.
+    private final PrescriptionRepository prescriptionRepository;
 
-// 3. **savePrescription Method**:
-//    - This method saves a new prescription to the database.
-//    - Before saving, it checks if a prescription already exists for the same appointment (using the appointment ID).
-//    - If a prescription exists, it returns a `400 Bad Request` with a message stating the prescription already exists.
-//    - If no prescription exists, it saves the new prescription and returns a `201 Created` status with a success message.
-//    - Instruction: Handle errors by providing appropriate status codes and messages, ensuring that multiple prescriptions for the same appointment are not saved.
+    public PrescriptionService(PrescriptionRepository prescriptionRepository) {
+        this.prescriptionRepository = prescriptionRepository;
+    }
+
+    public ResponseEntity<Map<String, String>> savePrescription(Prescription prescription) {
+        Map<String, String> response=new HashMap<>();
+        try {
+            Long appointmentId=prescription.getAppointmentId();
+            Optional<Prescription> optionalPrescription=prescriptionRepository.findByAppointmentId(appointmentId);
+            if(optionalPrescription.isPresent()) {
+                response.put("message" , "prescription already exists");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            prescriptionRepository.save(prescription);
+            response.put("message", "Prescription added successfully");
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+        }
+        catch(Exception e) {
+            response.put("error","Error occured");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    public ResponseEntity<Map<String, Object>> getPrescription(Long appointmentId) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            Optional<Prescription> prescriptionOptional =
+                    prescriptionRepository.findByAppointmentId(appointmentId);
+
+            if (prescriptionOptional.isEmpty()) {
+                response.put("message", "No prescription found for this appointment");
+                return ResponseEntity.ok(response); // 200 OK, but informative message
+            }
+
+            response.put("prescription", prescriptionOptional.get());
+            return ResponseEntity.ok(response); // 200 OK with prescription
+
+        } catch (Exception e) {
+            response.put("message", "Error retrieving prescription");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+
+
+
+
 
 // 4. **getPrescription Method**:
 //    - Retrieves a prescription associated with a specific appointment based on the `appointmentId`.
@@ -29,6 +77,20 @@ public class PrescriptionService {
 //    - Both methods (`savePrescription` and `getPrescription`) contain try-catch blocks to handle exceptions that may occur during database interaction.
 //    - If an error occurs, the method logs the error and returns an HTTP `500 Internal Server Error` response with a corresponding error message.
 //    - Instruction: Ensure that all potential exceptions are handled properly, and meaningful responses are returned to the client.
+// 1. **Add @Service Annotation**:
+//    - The `@Service` annotation marks this class as a Spring service component, allowing Spring's container to manage it.
+//    - This class contains the business logic related to managing prescriptions in the healthcare system.
+//    - Instruction: Ensure the `@Service` annotation is applied to mark this class as a Spring-managed service.
+// 2. **Constructor Injection for Dependencies**:
+//    - The `PrescriptionService` class depends on the `PrescriptionRepository` to interact with the database.
+//    - It is injected through the constructor, ensuring proper dependency management and enabling testing.
+//    - Instruction: Constructor injection is a good practice, ensuring that all necessary dependencies are available at the time of service initialization.
+// 3. **savePrescription Method**:
+//    - This method saves a new prescription to the database.
+//    - Before saving, it checks if a prescription already exists for the same appointment (using the appointment ID).
+//    - If a prescription exists, it returns a `400 Bad Request` with a message stating the prescription already exists.
+//    - If no prescription exists, it saves the new prescription and returns a `201 Created` status with a success message.
+//    - Instruction: Handle errors by providing appropriate status codes and messages, ensuring that multiple prescriptions for the same appointment are not saved.
 
 
 }

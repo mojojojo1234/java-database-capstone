@@ -88,11 +88,11 @@ export function openModal(type) {
   }
 
   if (type === 'addDoctor') {
-    document.getElementById('saveDoctorBtn').addEventListener('click', adminAddDoctor);
+    document.getElementById('saveDoctorBtn').addEventListener('click', window.adminAddDoctor);
   }
 
   if (type === 'adminLogin') {
-    document.getElementById('adminLoginBtn').addEventListener('click', adminLoginHandler);
+    document.getElementById('adminLoginBtn').addEventListener('click', window.adminLoginHander);
   }
 
   if (type === 'doctorLogin') {

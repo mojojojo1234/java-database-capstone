@@ -1,11 +1,39 @@
 package com.project.back_end.mvc;
+import com.project.back_end.services.SharedService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.Map;
+
+@Controller
 public class DashboardController {
 
-// 1. Set Up the MVC Controller Class:
-//    - Annotate the class with `@Controller` to indicate that it serves as an MVC controller returning view names (not JSON).
-//    - This class handles routing to admin and doctor dashboard pages based on token validation.
+    @Autowired
+    SharedService service;
 
+    @GetMapping("/adminDashboard/{token}")
+    public String adminDashboad(@PathVariable String token) {
+        Map<String, Object> validationResult=service.validateToken(token, "admin");
+        if(validationResult.isEmpty()) {
+            return "/admin/adminDashboard";
+        }
+        else return "redirect:/";
+    }
+
+    @GetMapping("/doctorDashboard/{token}")
+    public String doctorDashboard(@PathVariable String token) {
+        Map<String, Object> validationResult = service.validateToken(token, "doctor");
+
+        if (validationResult.isEmpty()) {
+            // Token valid → render doctor dashboard view
+            return "doctor/doctorDashboard";
+        } else {
+            // Token invalid → redirect to root
+            return "redirect:/";
+        }
+    }
 
 // 2. Autowire the Shared Service:
 //    - Inject the common `Service` class, which provides the token validation logic used to authorize access to dashboards.
@@ -27,4 +55,8 @@ public class DashboardController {
 //    - If the token is invalid, redirects to the root URL.
 
 
+
+    // 1. Set Up the MVC Controller Class:
+//    - Annotate the class with `@Controller` to indicate that it serves as an MVC controller returning view names (not JSON).
+//    - This class handles routing to admin and doctor dashboard pages based on token validation.
 }

@@ -2,7 +2,8 @@
 
 // Function to render the footer content
 function renderFooter() {
-    const footer = document.getElementById("footer");
+    // const footer = document.getElementById("footer");
+    const footer = document.getElementsByClassName("footer")[0];
 
     if (!footer) return;
 

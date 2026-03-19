@@ -1,6 +1,6 @@
 // updateAppointment.js
-import { updateAppointment } from "../js/services/appointmentRecordService.js";
-import { getDoctors } from "../js/services/doctorServices.js";
+import { updateAppointment } from "./services/appointmentRecordService.js";
+import { getDoctors } from "./services/doctorServices.js";
 document.addEventListener("DOMContentLoaded", initializePage);
 
 async function initializePage() {
@@ -21,12 +21,10 @@ async function initializePage() {
     window.location.href = "/pages/patientAppointments.html";
     return;
   }
-
-  // get doctor to display only the available time of doctor
   getDoctors()
     .then(doctors => {
-      // Find the doctor by the ID from the URL
       const doctor = doctors.find(d => d.id == doctorId);
+        console.log("doctor found:", doctor);
       if (!doctor) {
         alert("Doctor not found.");
         return;
@@ -47,12 +45,13 @@ async function initializePage() {
       });
 
       // Handle form submission for updating the appointment
+        console.log("Attaching submit listener");
       document.getElementById("updateAppointmentForm").addEventListener("submit", async (e) => {
         e.preventDefault(); // Prevent default form submission
 
         const date = document.getElementById("appointmentDate").value;
         const time = document.getElementById("appointmentTime").value;
-        const startTime = time.split('-')[0];
+        const startTime = time.split('-')[0].replace(/ AM| PM/i, '');
         if (!date || !time) {
           alert("Please select both date and time.");
           return;

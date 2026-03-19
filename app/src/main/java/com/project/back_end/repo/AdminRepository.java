@@ -1,6 +1,15 @@
 package com.project.back_end.repo;
 
-public interface AdminRepository {
+import com.project.back_end.models.Admin;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface AdminRepository extends JpaRepository<Admin, Long> {
+//    public Admin findByUsername(String username);
+    public Optional<Admin> findByUsername(String username);
+//    public Admin findByEmail(String email);
+//    public Optional<Admin> findByEmail(String email);
 
     // 1. Extend JpaRepository:
 //    - The repository extends JpaRepository<Admin, Long>, which gives it basic CRUD functionality.

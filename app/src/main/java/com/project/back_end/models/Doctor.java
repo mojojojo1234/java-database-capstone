@@ -1,5 +1,6 @@
 package com.project.back_end.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -38,6 +39,7 @@ public class Doctor {
     private String phone;
 
     @ElementCollection
+//    @JsonIgnore
     private List<String> availableTimes;
 
     public Long getId() {

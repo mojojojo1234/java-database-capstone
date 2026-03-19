@@ -1,11 +1,69 @@
 package com.project.back_end.controllers;
 
+import com.project.back_end.models.Appointment;
+import com.project.back_end.models.Prescription;
+import com.project.back_end.services.AppointmentService;
+import com.project.back_end.services.PrescriptionService;
+import com.project.back_end.services.SharedService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("${api.path}"+"prescription")
 public class PrescriptionController {
+
+    @Autowired
+    private PrescriptionService prescriptionService;
+    @Autowired
+    private SharedService service;
+    @Autowired
+    private AppointmentService appointmentService;
+
+    @PostMapping("/{token}")
+    public ResponseEntity<?> savePrescription(@PathVariable String token,
+                                              @Valid @RequestBody Prescription prescription) {
+        try{
+
+        boolean isValid = service.validateToken(token, "Doctor").isEmpty();
+
+        if (!isValid) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid token");
+        }
+            Appointment appointment = new Appointment();
+            appointment.setId(prescription.getAppointmentId());
+
+            appointmentService.updateAppointment(appointment);
+        return prescriptionService.savePrescription(prescription);
+
+    }
+        catch(Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Internal server error");
+    }
+  }
+
+    @GetMapping("/{appointmentId}/{token}")
+    public ResponseEntity<?> getPrescription(@PathVariable Long appointmentId, @PathVariable String token) {
+        try {
+            boolean isValid = service.validateToken(token, "Doctor").isEmpty();
+
+            if (!isValid) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Invalid token");
+            }
+            return prescriptionService.getPrescription(appointmentId);
+        }
+        catch(Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Internal server error");
+        }
+    }
     
-// 1. Set Up the Controller Class:
-//    - Annotate the class with `@RestController` to define it as a REST API controller.
-//    - Use `@RequestMapping("${api.path}prescription")` to set the base path for all prescription-related endpoints.
-//    - This controller manages creating and retrieving prescriptions tied to appointments.
+
 
 
 // 2. Autowire Dependencies:
@@ -28,6 +86,9 @@ public class PrescriptionController {
 //    - Validates the token for the `"doctor"` role using the shared service.
 //    - If the token is valid, fetches the prescription using the `PrescriptionService`.
 //    - Returns the prescription details or an appropriate error message if validation fails.
-
+// 1. Set Up the Controller Class:
+//    - Annotate the class with `@RestController` to define it as a REST API controller.
+//    - Use `@RequestMapping("${api.path}prescription")` to set the base path for all prescription-related endpoints.
+//    - This controller manages creating and retrieving prescriptions tied to appointments.
 
 }

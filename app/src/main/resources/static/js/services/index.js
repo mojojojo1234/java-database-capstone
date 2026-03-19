@@ -1,3 +1,81 @@
+import { openModal } from "../components/modals.js";
+import { API_BASE_URL } from "../config/config.js";
+
+const ADMIN_API=API_BASE_URL+'/admin';
+const DOCTOR_APIT=API_BASE_URL+'/doctor/login';
+
+window.onload = function () {
+    const adminBtn = document.getElementById('btn-admin');
+    if (adminBtn) {
+        adminBtn.addEventListener('click', () => {
+            openModal('adminLogin');
+        });
+    }
+    const doctorBtn=document.getElementById('btn-doctor');
+        if (doctorBtn) {
+            doctorBtn.addEventListener('click', () => {
+                openModal('doctorLogin');
+            });
+        }
+    const patientBtn=document.getElementById('btn-patient');
+    if (patientBtn) {
+        patientBtn.addEventListener('click', () => {
+            selectRole("patient");
+        });
+    }
+    }
+
+window.adminLoginHander=async function() {
+    try{
+        const username=document.getElementById("username").value;
+        const password=document.getElementById("password").value;
+
+        const admin={password, username};
+
+
+        const response=await fetch(API_BASE_URL + '/admin/login',{
+            method:"POST",
+            headers: {"Content-Type":"application/json"},
+            body:JSON.stringify(admin)
+        })
+        if(response.ok) {
+            const data=await response.json();
+            localStorage.setItem("token",data.token);
+            selectRole("admin")
+        } else alert("Invalid credentials");
+
+    }catch(error) {
+        alert("An unexpected error occured!");
+        console.log(error);
+    }
+}
+
+window.doctorLoginHandler=async function() {
+    try{
+      const email=document.getElementById("email").value;
+      const password=document.getElementById("password").value;
+
+      const doctor={email, password};
+
+      const response=await fetch(API_BASE_URL + '/doctor/login',{
+          method:"POST",
+          headers: {"Content-Type":"application/json"},
+          body:JSON.stringify(doctor)
+      });
+      if(response.ok){
+          const data=await response.json();
+          localStorage.setItem("token",data.token);
+          selectRole("doctor");
+      }else alert("Invalid credentials");
+    }
+    catch(error){
+        alert("An unexpected error occured")
+        console.log(error)
+    }
+
+}
+
+
 /*
   Import the openModal function to handle showing login popups/modals
   Import the base API URL from the config file

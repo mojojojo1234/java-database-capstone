@@ -1,3 +1,5 @@
+import { getPatientData } from "../services/patientServices.js";
+import { showBookingOverlay } from "../loggedPatient.js";
 export function createDoctorCard(doctor) {
     const card=document.createElement("div");
     card.classList.add("doctor-card");
@@ -11,13 +13,14 @@ export function createDoctorCard(doctor) {
     name.textContent=doctor.name;
 
     const specialization=document.createElement("h3");
-    specialization.textContent=doctor.specialization;
+    specialization.textContent=doctor.specialty;
 
     const email=document.createElement("h3");
     email.textContent=doctor.email;
 
     const availability=document.createElement("h3");
-    availability.textContent=doctor.availability.join(",");
+    const times = Array.isArray(doctor.availableTimes) ? doctor.availableTimes : [];
+    availability.textContent=times.join(",");
 
     infoDiv.appendChild(name);
     infoDiv.appendChild(specialization);

@@ -8,14 +8,18 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" th:href="@{/assets/css/adminDashboard.css}">
-    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+    <link rel="stylesheet" href="/assets/css/adminDashboard.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
 
-    <script th:src="@{/js/render.js}" defer></script>
-    <script th:src="@{/js/util.js}" defer></script>
+    <script src="/js/render.js" defer></script>
+    <script src="/js/util.js" defer></script>
+    <script src="/js/components/header.js" defer></script>
+    <script src="/js/components/footer.js" defer></script>
+<!--    <script th:src="@{/js/render.js}" defer></script>-->
+<!--    <script th:src="@{/js/util.js}" defer></script>-->
 
-    <script th:src="@{/js/components/header.js}" defer></script>
-    <script th:src="@{/js/components/footer.js}" defer></script>
+<!--    <script th:src="@{/js/components/header.js}" defer></script>-->
+<!--    <script th:src="@{/js/components/footer.js}" defer></script>-->
 </head>
 <body>
     <div class="container">
@@ -25,13 +29,13 @@
                 <input type="text" id="searchBar" placeholder="Search by doctor name" />
 
                 <!-- Filter Dropdowns -->
-                <select id="timeFilter">
+                <select id="filterTime">
                     <option value="">Select Time</option>
                     <option value="AM">AM</option>
                     <option value="PM">PM</option>
                 </select>
 
-                <select id="specialtyFilter">
+                <select id="filterSpecialty">
                     <option value="">Select Specialty</option>
                     <option value="Cardiologist">Cardiologist</option>
                     <option value="Dentist">Dentist</option>
@@ -50,8 +54,10 @@
             <div id="modal-body"></div>
         </div>
     </div>
-    <script type="module" src="../../static/js/adminDashboard.js" defer></script>
-    <script type="module" src="../../static/js/doctorDashboard.js" defer></script>
+    <script type="module" src="/js/adminDashboard.js" defer></script>
+    <script type="module" src="/js/doctorDashboard.js" defer></script>
+<!--    <script type="module" th:src="@{/js/adminDashboard.js}" defer></script>-->
+<!--    <script type="module" th:src="@{/js/doctorDashboard.js}" defer></script>-->
 </body>
 </html>
 <!-- 

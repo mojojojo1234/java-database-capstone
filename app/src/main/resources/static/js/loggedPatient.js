@@ -50,7 +50,7 @@ export function showBookingOverlay(e, doctor, patient) {
     <input class="input-field" type="date" id="appointment-date" />
     <select class="input-field" id="appointment-time">
       <option value="">Select time</option>
-      ${doctor.availableTimes.map(t => `<option value="${t}">${t}</option>`).join('')}
+        ${(Array.isArray(doctor.availableTimes) ? doctor.availableTimes : []).map(t => `<option value="${t}">${t}</option>`).join('')}
     </select>
     <button class="confirm-booking">Confirm Booking</button>
   `;
@@ -62,8 +62,10 @@ export function showBookingOverlay(e, doctor, patient) {
   modalApp.querySelector(".confirm-booking").addEventListener("click", async () => {
     const date = modalApp.querySelector("#appointment-date").value;
     const time = modalApp.querySelector("#appointment-time").value;
+    console.log("date:",date,"time:",time);
     const token = localStorage.getItem("token");
-    const startTime = time.split('-')[0];
+    const startTime = time.split('-')[0].replace(/ AM| PM/i, '');
+
     const appointment = {
       doctor: { id: doctor.id },
       patient: { id: patient.id },
@@ -82,11 +84,10 @@ export function showBookingOverlay(e, doctor, patient) {
       alert("❌ Failed to book an appointment :: " + message);
     }
   });
+  console.log("doctor.availableTimes:", doctor.availableTimes);
 }
 
 
-
-// Filter Input
 document.getElementById("searchBar").addEventListener("input", filterDoctorsOnChange);
 document.getElementById("filterTime").addEventListener("change", filterDoctorsOnChange);
 document.getElementById("filterSpecialty").addEventListener("change", filterDoctorsOnChange);
@@ -125,6 +126,11 @@ function filterDoctorsOnChange() {
       alert("❌ An error occurred while filtering doctors.");
     });
 }
+
+// export function showBookingOverlay(e, doctor, patient) {
+//   console.log("doctor.availableTimes:", doctor.availableTimes); // ← add this
+// }
+
 
 export function renderDoctorCards(doctors) {
   const contentDiv = document.getElementById("content");

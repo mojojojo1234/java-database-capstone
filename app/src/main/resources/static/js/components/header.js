@@ -1,4 +1,5 @@
 function renderHeader() {
+    // const headerDiv = document.getElementById("header");
     const headerDiv = document.getElementById("header");
 
 
@@ -65,14 +66,14 @@ function attachHeaderButtonListeners() {
     const logoutPatientBtn=document.getElementById("logoutPatientBtn");
     if(logoutPatientBtn) logoutPatientBtn.addEventListener("click",logoutPatient);
 
-    const patienLogin=document.getElementById("patientLogin");
-    if(patienLogin) patienLogin.addEventListener("click",()=> {
-        window.location.href="/pages/patientLogin.html";    //bookmark
-    });
-    const patientSignup=document.getElementById("patientSignup");
-    if(patientSignup) patientSignup.addEventListener("click",()=>{
-        window.location.href="/pages/patientSignup.html";   //bookmark
-    });
+    // const patienLogin=document.getElementById("patientLogin");
+    // if(patienLogin) patienLogin.addEventListener("click",()=> {
+    //     window.location.href="/pages/patientLogin.html";    //bookmark
+    // });
+    // const patientSignup=document.getElementById("patientSignup");
+    // if(patientSignup) patientSignup.addEventListener("click",()=>{
+    //     window.location.href="/pages/patientSignup.html";   //bookmark
+    // });
 }
 
 function logout() {
@@ -84,7 +85,7 @@ function logout() {
 function logoutPatient() {
     localStorage.removeItem("token");
     localStorage.setItem("userRole","patient");
-    window.location.href="pages/patientDashboard.html";
+    window.location.href="/pages/patientDashboard.html";
 }
 
 document.addEventListener("DOMContentLoaded", renderHeader);

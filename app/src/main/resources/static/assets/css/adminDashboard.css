@@ -29,7 +29,7 @@ h2 {
     flex-grow: 1;
     padding: 40px;
     text-align: center;
-    background-image: url("static/assets/images/defineRole/index.png");
+    background-image: url("../images/defineRole/index.png");
     background-size:cover;
     background-position: center;
     background-repeat: no-repeat;
