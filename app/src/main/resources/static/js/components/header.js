@@ -1,5 +1,10 @@
 function renderHeader() {
-    // const headerDiv = document.getElementById("header");
+    const modal = document.getElementById('modal');
+    if (modal) {
+        modal.style.display = 'none';
+        const modalBody = document.getElementById('modal-body');
+        if (modalBody) modalBody.innerHTML = '';
+    }
     const headerDiv = document.getElementById("header");
 
 

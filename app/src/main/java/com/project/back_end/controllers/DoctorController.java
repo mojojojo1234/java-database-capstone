@@ -53,6 +53,7 @@ public class DoctorController {
 
     @GetMapping("/doctors")
     public ResponseEntity<Map<String, Object>> getDoctors() {
+        System.out.println("DEBUG - getDoctors hit");
         Map<String, Object> response=new HashMap<>();
         List<DoctorDTO> doctors=doctorService.getAllDoctorDtos();
         response.put("doctors",doctors);
@@ -112,13 +113,13 @@ public class DoctorController {
     }
 
     @DeleteMapping("/{id}/{token}")
-    public ResponseEntity<Map<String, Object>> deleteDoctor(@PathVariable Long doctorId, @PathVariable String token) {
+    public ResponseEntity<Map<String, Object>> deleteDoctor(@PathVariable Long id, @PathVariable String token) {
         Map<String, Object> response=new HashMap<>();
         Map<String, Object> errors=service.validateToken(token,"admin");
         if(!errors.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errors);
         }
-        int i=doctorService.deleteDoctor(doctorId);
+        int i=doctorService.deleteDoctor(id);
         if (i == 0) {
             response.put("message", "Doctor not found");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);

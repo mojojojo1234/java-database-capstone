@@ -1,13 +1,7 @@
 import {openModal} from "./components/modals.js";
-import {getDoctors, filterDoctors, saveDoctor} from "../js/services/doctorServices.js";
-import {createDoctorCard} from "../js/components/doctorCard.js";
-// import {renderDoctorCards} from "./loggedPatient";
-
-// document.getElementById('addDocBtn').addEventListener('click',()=>{
-//     openModal('addDoctor');
-// })
-
-
+import {getDoctors, filterDoctors, saveDoctor} from "./services/doctorServices.js";
+import {createDoctorCard} from "./components/doctorCard.js";
+window.openModal = openModal; // ← add this after the import
 window.addEventListener("DOMContentLoaded", () => {
     // wait a bit for header to be injected
     setTimeout(() => {
@@ -17,8 +11,6 @@ window.addEventListener("DOMContentLoaded", () => {
                 openModal('addDoctor');
             });
         }
-
-        // optional: attach other listeners if needed
         const searchBar = document.getElementById("searchBar");
         const filterTime = document.getElementById("filterTime");
         const filterSpecialty = document.getElementById("filterSpecialty");
@@ -53,9 +45,9 @@ function renderDoctorCards(doctors) {
         contentDiv.appendChild(card);
     })
 }
-document.getElementById("searchBar").addEventListener("input", filterDoctorsOnChange);
-document.getElementById("filterTime").addEventListener("change", filterDoctorsOnChange);
-document.getElementById("filterSpecialty").addEventListener("change", filterDoctorsOnChange);
+// document.getElementById("searchBar").addEventListener("input", filterDoctorsOnChange);
+// document.getElementById("filterTime").addEventListener("change", filterDoctorsOnChange);
+// document.getElementById("filterSpecialty").addEventListener("change", filterDoctorsOnChange);
 
 
 async function filterDoctorsOnChange() {
@@ -63,8 +55,8 @@ async function filterDoctorsOnChange() {
     const time=document.getElementById("filterTime").value;
     const specialty=document.getElementById("filterSpecialty").value;
 
-    const doctors=await filterDoctors(search, time, specialty);
-    renderDoctorCards(doctors);
+    const response=await filterDoctors(search, time, specialty);
+    renderDoctorCards(response.doctors || []);
 }
 
 async function adminAddDoctor(event) {
@@ -81,25 +73,25 @@ async function adminAddDoctor(event) {
         availability.push(checkbox.value);
     })
     const doctorData = {
-        name: document.getElementById("docName").value,
-        specialty: document.getElementById("docSpecialty").value,
-        email: document.getElementById("docEmail").value,
-        password: document.getElementById("docPassword").value,
-        mobile: document.getElementById("docMobile").value,
-        availabilityTime: document.getElementById("docTime").value,
-        availabilityDays: availability
+        name: document.getElementById("doctorName").value,
+        specialty: document.getElementById("specialization").value,
+        email: document.getElementById("doctorEmail").value,
+        password: document.getElementById("doctorPassword").value,
+        phone: document.getElementById("doctorPhone").value,
+        availableTimes: Array.from(
+            document.querySelectorAll('input[name="availability"]:checked')
+        ).map(cb => cb.value)
     };
-
+    console.log("doctorData:", JSON.stringify(doctorData));
     try {
         const result = await saveDoctor(doctorData, token);
 
-        if (result) {
+        if (result.success) {
             alert("Doctor added successfully");
+            document.getElementById('modal').style.display='none';
             loadDoctorCards();
-            document.getElementById("addDoctorForm").reset();
-            openModal(null); // close modal
         } else {
-            alert("Failed to add doctor");
+            alert("Failed to add doctor: " + result.message);
         }
 
     } catch (error) {
@@ -107,6 +99,7 @@ async function adminAddDoctor(event) {
         console.error(error);
     }
 }
+window.adminAddDoctor=adminAddDoctor;
 /*
 
   This script handles the admin dashboard functionality for managing doctors:

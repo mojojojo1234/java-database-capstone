@@ -1,5 +1,6 @@
 import { getPatientData } from "../services/patientServices.js";
 import { showBookingOverlay } from "../loggedPatient.js";
+import { deleteDoctor } from "../services/doctorServices.js";
 export function createDoctorCard(doctor) {
     const card=document.createElement("div");
     card.classList.add("doctor-card");
@@ -38,9 +39,13 @@ export function createDoctorCard(doctor) {
             if (!confirmDelete) return;
 
             const token = localStorage.getItem("token");
-            await deleteDoctor(doctor.id, token);
-            card.remove();
-        })
+            const result=await deleteDoctor(doctor.id, token);
+            if(result.success) {
+                card.remove();
+            }else {
+                alert("Failed to delete doctor:" +result.message);
+            }
+        });
         actionsDiv.appendChild(removeBtn);
     }else if(role==="patient"){
         const bookNow=document.createElement("button");

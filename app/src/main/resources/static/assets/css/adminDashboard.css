@@ -22,7 +22,10 @@ h2 {
     margin-bottom: 50px;
     color: #003e3e;
 }
-
+#searchBar {
+    height: 31px;
+    margin-bottom: 5px;
+}
 .main-content {
     display: flex;
     flex-direction: column;
