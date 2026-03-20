@@ -100,6 +100,18 @@ public class AppointmentController {
         return appointmentService.cancelAppointment(id, token);
     }
 
+    @GetMapping("/{date}/{token}")
+    public ResponseEntity<?> getAppointmentsByDate(@PathVariable String date, @PathVariable String token) {
+        Map<String, String> response = new HashMap<>();
+        boolean valid = tokenService.validateToken(token, "doctor");
+        if(!valid) {
+            response.put("message", "Invalid or expired token");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
+        Map<String, Object> appointments = appointmentService.getAppointment(null, LocalDate.parse(date), token);
+        return ResponseEntity.ok(appointments);
+    }
+
 
 
 

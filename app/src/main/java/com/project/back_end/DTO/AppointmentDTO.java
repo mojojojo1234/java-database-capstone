@@ -17,6 +17,7 @@ public class AppointmentDTO {
     private LocalDateTime appointmentTime;
     private int status;
 
+    public AppointmentDTO() {}
     public AppointmentDTO(Long id, Long doctorId, String doctorName, Long patientId, String patientName, String patientEmail, String patientPhone, String patientAddress, LocalDateTime appointmentTime, int status) {
         this.id = id;
         this.doctorId = doctorId;

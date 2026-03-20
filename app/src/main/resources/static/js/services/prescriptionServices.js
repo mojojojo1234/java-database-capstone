@@ -11,12 +11,12 @@ export async function savePrescription(prescription, token) {
       },
       body: JSON.stringify(prescription)
     });
-    const result = await response.json();
+    const result = await response.text();
     return { success: response.ok, message: result.message }
   }
   catch (error) {
     console.error("Error :: savePrescription :: ", error)
-    return { success: false, message: result.message }
+    return { success: false, message: error.message }
   }
 }
 

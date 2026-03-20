@@ -1,114 +1,3 @@
-// import {getAllAppointments} from "../js/services/appointmentRecordService.js";
-// import {createPatientRow} from "../js/components/patientRows.js";
-//
-// // import {getAllAppointments} from "./services/appointmentRecordService";
-// // import {createPatientRow} from "./components/patientRows";
-//
-// const tableBody=document.getElementById("patientTableBody");
-// const searchBar=document.getElementById("searchBar");
-// const todayButton=document.getElementById("todayButton");
-// const datePicker=document.getElementById("datePicker");
-//
-// let selectedDate=new Date().toISOString().split("T")[0];
-// let patientName=null;
-// let token=localStorage.getItem("token");
-//
-// window.addEventListener("DOMContentLoaded", () => {
-//     const datePicker = document.getElementById("datePicker");
-//     const selectedDate = new Date().toISOString().split("T")[0]; // today in YYYY-MM-DD format
-//
-//     if (datePicker) {
-//         datePicker.value = selectedDate;
-//     }
-// });
-//
-//
-// async function loadAppointments() {
-//     if(!token) {
-//         alert("not authenticated");
-//         return;
-//     }
-//
-//     try{
-//         const url = `/doctor/${selectedDate}/${patientName}/${token}`;
-//         const response = await fetch(url, { method: "GET" });
-//         tableBody.innerHTML="";
-//         if(!response.ok) {
-//             const err=await response.json();
-//             const tr = document.createElement("tr");
-//             tr.innerHTML = `<td colspan="5" class="noPatientRecord">${err.message || "Error loading appointments"}</td>`;
-//             tableBody.appendChild(tr);
-//             return;
-//         }
-//         const data=await response.json();
-//         const appointments=Object.values(data);
-//         if (appointments.length === 0) {
-//             const tr = document.createElement("tr");
-//             tr.innerHTML = `<td colspan="5" class="noPatientRecord">No appointments found for ${selectedDate}</td>`;
-//             tableBody.appendChild(tr);
-//             return;
-//         }
-//         appointments.forEach(app => {
-//             const patient = {
-//                 id: app.patientId,
-//                 name: app.patientName,
-//                 phone: app.patientPhone,
-//                 email: app.patientEmail,
-//                 prescription: app.prescriptionId // optional
-//             };
-//             const row = createPatientRow(patient);
-//             tableBody.appendChild(row);
-//         });
-//     }catch (err) {
-//         console.error("Error loading appointments:", err);
-//         const tr = document.createElement("tr");
-//         tr.innerHTML = `<td colspan="5" class="noPatientRecord">Error loading appointments. Try again later.</td>`;
-//         tableBody.appendChild(tr);
-//     }
-// }
-//
-//
-//
-// searchBar.addEventListener("input",()=>{
-//     const value=searchBar.value.trim();
-//     patientName=value!==""? value:null;
-//     loadAppointments();
-// })
-// document.addEventListener("DOMContentLoaded", () => {
-//     const todayButton = document.getElementById("todayButton");
-//     const datePicker = document.getElementById("datePicker");
-//
-//     let selectedDate = new Date().toISOString().split("T")[0];
-//     if (datePicker) datePicker.value = selectedDate;
-//
-//     if (todayButton) {
-//         todayButton.addEventListener("click", () => {
-//             selectedDate = new Date().toISOString().split("T")[0];
-//             if (datePicker) datePicker.value = selectedDate;
-//             loadAppointments();
-//         });
-//     }
-//
-//     // initialize table
-//     loadAppointments();
-// });
-// // todayButton.addEventListener("click", () => {
-// //     selectedDate = new Date().toISOString().split("T")[0];
-// //     datePicker.value = selectedDate;
-// //     loadAppointments();
-// // });
-//
-// datePicker.addEventListener("change", () => {
-//     selectedDate = datePicker.value;
-//     loadAppointments();
-// });
-//
-// document.addEventListener("DOMContentLoaded",()=>{
-//     if(!datePicker.value) datePicker.value=selectedDate;
-//     loadAppointments();
-// })
-
-
 import { getAllAppointments } from "../js/services/appointmentRecordService.js";
 import { createPatientRow } from "../js/components/patientRows.js";
 
@@ -133,8 +22,9 @@ window.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            const nameParam = patientName ? patientName : "null";
-            const url = `/appointments/${selectedDate}/${nameParam}/${token}`;
+            const url = patientName
+                ? `/appointments/${selectedDate}/${patientName}/${token}`
+                : `/appointments/${selectedDate}/${token}`;
 
             const response = await fetch(url, { method: "GET" });
 
@@ -150,7 +40,7 @@ window.addEventListener("DOMContentLoaded", () => {
             }
 
             const data = await response.json();
-            const appointments = Object.values(data);
+            const appointments = data.appointments || [];
 
             if (appointments.length === 0) {
                 const tr = document.createElement("tr");
@@ -201,6 +91,7 @@ window.addEventListener("DOMContentLoaded", () => {
     // Date picker change
     if (datePicker) {
         datePicker.addEventListener("change", () => {
+            console.log("Date picker changed to:", datePicker.value);
             selectedDate = datePicker.value;
             loadAppointments();
         });

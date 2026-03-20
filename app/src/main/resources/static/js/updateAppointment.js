@@ -48,9 +48,10 @@ async function initializePage() {
         console.log("Attaching submit listener");
       document.getElementById("updateAppointmentForm").addEventListener("submit", async (e) => {
         e.preventDefault(); // Prevent default form submission
-
-        const date = document.getElementById("appointmentDate").value;
+          console.log("Form submitted");
+          const date = document.getElementById("appointmentDate").value;
         const time = document.getElementById("appointmentTime").value;
+        console.log("date:", date, "time:", time);
         const startTime = time.split('-')[0].replace(/ AM| PM/i, '');
         if (!date || !time) {
           alert("Please select both date and time.");

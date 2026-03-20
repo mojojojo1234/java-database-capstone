@@ -35,6 +35,7 @@ public class PrescriptionService {
 
         }
         catch(Exception e) {
+            e.printStackTrace();
             response.put("error","Error occured");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }

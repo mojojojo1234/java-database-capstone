@@ -4,6 +4,8 @@ import com.project.back_end.models.Appointment;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,8 +29,17 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     // AppointmentRepository.java
     boolean existsByDoctorIdAndAppointmentTime(Long doctorId, LocalDateTime appointmentTime);
 
-//    @Transactional
-//    public void updateStatus(int status, long id);
+    @Query("SELECT a FROM Appointment a JOIN FETCH a.doctor JOIN FETCH a.patient WHERE a.doctor.id = :doctorId AND a.appointmentTime BETWEEN :start AND :end")
+    List<Appointment> findByDoctorIdAndAppointmentTimeBetweenWithDetails(
+            @Param("doctorId") Long doctorId,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Appointment a SET a.status=1 WHERE a.id=:id")
+    void updateStatus(@Param("id") Long id);
 
 
 

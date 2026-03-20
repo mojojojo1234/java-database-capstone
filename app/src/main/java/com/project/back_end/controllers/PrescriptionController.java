@@ -24,7 +24,10 @@ public class PrescriptionController {
 
     @PostMapping("/{token}")
     public ResponseEntity<?> savePrescription(@PathVariable String token,
-                                              @Valid @RequestBody Prescription prescription) {
+                                               @RequestBody Prescription prescription) {
+        System.out.println("DEBUG - savePrescription hit, appointmentId: " + prescription.getAppointmentId());
+        System.out.println("DEBUG - patientName: " + prescription.getPatientName());
+        System.out.println("DEBUG - medication: " + prescription.getMedication());
         try{
 
         boolean isValid = service.validateToken(token, "Doctor").isEmpty();
@@ -33,10 +36,10 @@ public class PrescriptionController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("Invalid token");
         }
-            Appointment appointment = new Appointment();
-            appointment.setId(prescription.getAppointmentId());
+//            Appointment appointment = new Appointment();
+//            appointment.setId(prescription.getAppointmentId());
 
-            appointmentService.updateAppointment(appointment);
+            appointmentService.completeAppointment(prescription.getAppointmentId());
         return prescriptionService.savePrescription(prescription);
 
     }

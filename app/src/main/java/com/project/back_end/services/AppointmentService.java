@@ -1,5 +1,6 @@
 package com.project.back_end.services;
 
+import com.project.back_end.DTO.AppointmentDTO;
 import com.project.back_end.models.Appointment;
 import com.project.back_end.models.Doctor;
 import com.project.back_end.repo.AppointmentRepository;
@@ -44,19 +45,24 @@ public class AppointmentService {
         }
     }
 
+
     public ResponseEntity<Map<String,String>> updateAppointment(Appointment appointment) {
-        Map<String,String> response=new HashMap<>();
+        Map<String,String> response = new HashMap<>();
         if(appointmentRepository.findById(appointment.getId()).isEmpty()) {
             response.put("message", "Appointment not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
-        int i=service.validateAppointment(appointment);
-        if(i!=1) {
-            response.put("message", "Invalid appointment details");
+        // Replace validateAppointment with direct slot check
+        boolean alreadyBooked = appointmentRepository.existsByDoctorIdAndAppointmentTime(
+                appointment.getDoctor().getId(),
+                appointment.getAppointmentTime()
+        );
+        if(alreadyBooked) {
+            response.put("message", "This time slot is already booked");
             return ResponseEntity.badRequest().body(response);
         }
         appointmentRepository.save(appointment);
-        response.put("message","Appointment updated successfully");
+        response.put("message", "Appointment updated successfully");
         return ResponseEntity.ok(response);
     }
 
@@ -86,7 +92,10 @@ public class AppointmentService {
             return response;
         }
         String email=tokenService.extractEmail(token);
+        System.out.println("DEBUG - doctor email: " + email);
         Optional<Doctor> optionalDoctor=doctorRepository.findByEmail(email);
+        System.out.println("DEBUG - doctor found: " + optionalDoctor.isPresent());
+
         if(optionalDoctor.isEmpty()){
             response.put("message","Doctor");
             return response;
@@ -94,22 +103,75 @@ public class AppointmentService {
         Long doctorId = optionalDoctor.get().getId();
         LocalDateTime start = date.atStartOfDay();
         LocalDateTime end = date.atTime(LocalTime.MAX);
-        List<Appointment> appointments =
-                appointmentRepository.findByDoctorIdAndAppointmentTimeBetween(
-                        doctorId, start, end
-                );
+        if(optionalDoctor.isPresent()) {
+            System.out.println("DEBUG - doctor id: " + optionalDoctor.get().getId());
+            System.out.println("DEBUG - start: " + start + " end: " + end);
+            System.out.println("DEBUG - appointments count: " +
+                    appointmentRepository.findByDoctorIdAndAppointmentTimeBetween(
+                            optionalDoctor.get().getId(), start, end).size());
+        }
+        List<Appointment> appointments = appointmentRepository
+                .findByDoctorIdAndAppointmentTimeBetweenWithDetails(doctorId, start, end);
+        System.out.println("DEBUG - JOIN FETCH result size: " + appointments.size());
         if(name != null && !name.isEmpty()) {
             appointments = appointments.stream()
                     .filter(a -> a.getPatient().getName().equalsIgnoreCase(name))
                     .toList();
         }
-        response.put("appointments", appointments);
+        List<AppointmentDTO> appointmentDTOs = appointments.stream()
+                .map(a -> {
+                    System.out.println("DEBUG - mapping appointment id: " + a.getId());
+                    System.out.println("DEBUG - doctor: " + (a.getDoctor() != null ? a.getDoctor().getId() : "NULL"));
+                    System.out.println("DEBUG - patient: " + (a.getPatient() != null ? a.getPatient().getId() : "NULL"));
+                    try {
+                        return new AppointmentDTO(
+                                a.getId(),
+                                a.getDoctor().getId(),
+                                a.getDoctor().getName(),
+                                a.getPatient().getId(),
+                                a.getPatient().getName(),
+                                a.getPatient().getEmail(),
+                                a.getPatient().getPhone(),
+                                a.getPatient().getAddress(),
+                                a.getAppointmentTime(),
+                                a.getStatus()
+                        );
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                        System.out.println("DEBUG - exception type: " + e.getClass().getName());
+                        System.out.println("DEBUG - exception message: " + e.getMessage());
+                        System.out.println("DEBUG - appointment id: " + a.getId());
+                        return null;
+                    }
+                })
+                .filter(a -> a != null)
+                .toList();
 
+        System.out.println("DEBUG - DTO list size: " + appointmentDTOs.size());
+        response.put("appointments", appointmentDTOs);
         return response;
     }
     public boolean isSlotTaken(Long doctorId, LocalDateTime appointmentTime) {
         return appointmentRepository.existsByDoctorIdAndAppointmentTime(doctorId, appointmentTime);
     }
+
+    @Transactional
+    public void completeAppointment(Long id) {
+        appointmentRepository.updateStatus(id);
+    }
+//    public ResponseEntity<Map<String, String>> completeAppointment(Long id) {
+//        Map<String, String> response = new HashMap<>();
+//        Optional<Appointment> optional = appointmentRepository.findById(id);
+//        if(optional.isEmpty()) {
+//            response.put("message", "Appointment not found");
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+//        }
+//        Appointment appointment = optional.get();
+//        appointment.setStatus(1);
+//        appointmentRepository.save(appointment);
+//        response.put("message", "Appointment completed");
+//        return ResponseEntity.ok(response);
+//    }
 }
 
 
